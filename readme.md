@@ -2,7 +2,7 @@
  * @Author: xiangxun
  * @Date: 2023-12-26 16:55:56
  * @LastEditors: xiangxun
- * @LastEditTime: 2023-12-27 10:48:03
+ * @LastEditTime: 2023-12-27 22:57:57
  * @FilePath: /xv6-labs-2023/readme.md
  * @Description: 
 -->
@@ -142,3 +142,41 @@ if(fork() == 0) {
 参考管道通信：https://blog.csdn.net/qq_51604330/article/details/126492589
 
 ```
+
+#### primes
+任务要求
+> Write a concurrent prime sieve program for xv6 using pipes and the design illustrated in the picture halfway down this page and the surrounding text. This idea is due to Doug McIlroy, inventor of Unix pipes. Your solution should be in the file user/primes.c.
+运用管道写一个并发的素数筛选程序，
+
+提示
+
+
+解决方案:
+```
+ The sieve of Eratosthenes can be simulated by a pipeline of processes executing the following pseudocode:
+埃拉托色尼筛可以通过执行以下伪代码的进程管道来模拟，
+从左邻居读取第一个数字，直接打印（因为其本身就是素数），然后从左邻居接着读数字
+，一旦数字能被第一个数字整除，就忽略掉，
+相当于依次消除2的倍数，3的倍数，5的倍数，。。
+p = get a number from left neighbor
+print p
+loop:
+    n = get a number from left neighbor
+    if (p does not divide n)
+        send n to right neighbor
+
+```
+
+
+#### find
+任务要求
+> Write a simple version of the UNIX find program for xv6: find all the files in a directory tree with a specific name. Your solution should be in the file user/find.c.
+
+提示
+Look at user/ls.c to see how to read directories.
+Use recursion to allow find to descend into sub-directories.
+Don't recurse into "." and "..".
+Changes to the file system persist across runs of qemu; to get a clean file system run make clean and then make qemu.
+You'll need to use C strings. Have a look at K&R (the C book), for example Section 5.5.
+Note that == does not compare strings like in Python. Use strcmp() instead.
+Add the program to UPROGS in Makefile.

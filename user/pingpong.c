@@ -2,7 +2,7 @@
  * @Author: xiangxun
  * @Date: 2023-12-27 09:40:43
  * @LastEditors: xiangxun
- * @LastEditTime: 2023-12-27 12:19:55
+ * @LastEditTime: 2023-12-27 20:57:07
  * @FilePath: /xv6-labs-2023/user/pingpong.c
  * @Description: 
  */
@@ -26,21 +26,22 @@ main(int argc, char *argv[])
     pid = fork();
     if(pid == 0)
     {
-        // 关闭写端
-        close(p[1]);
+
         read(p[0], buf, 32);
-        printf("3%saaa\n", buf);
+        printf("%d: received %s\n", getpid(), buf);
         //关闭读端
         close(p[0]);
+        write(p[1], "pong", 32);//向管道写pong，父进程来读取
     }
-    else
+    else //父进程
     {
-        // 关闭读端
-        close(p[0]);
-        //fprintf(p[1], "x%d: received ping", getpid());
-        write(p[1], "xiang", 6);
-        printf("1%d: received pong", getpid());
-	    close(p[1]);
+
+        write(p[1], "ping", 32);
+        close(p[1]);
+        wait(0); // 等待子进程写数据
+        read(p[0], buf, 32); // 从p[0]中读取子进程发送的pong
+        printf("%d: received %s\n", getpid(), buf);
+	    close(p[0]);
     }
 
 
