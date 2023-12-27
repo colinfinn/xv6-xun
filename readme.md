@@ -2,8 +2,8 @@
  * @Author: xiangxun
  * @Date: 2023-12-26 16:55:56
  * @LastEditors: xiangxun
- * @LastEditTime: 2023-12-27 09:00:10
- * @FilePath: /xv6-riscv-xun/readme.md
+ * @LastEditTime: 2023-12-27 10:48:03
+ * @FilePath: /xv6-labs-2023/readme.md
  * @Description: 
 -->
 # 课程设计
@@ -17,8 +17,20 @@
 ```bash
 Arch 安装编译环境
 sudo pacman -S riscv64-linux-gnu-binutils riscv64-linux-gnu-gcc riscv64-linux-gnu-gdb qemu-arch-extra
-
-
+文件注释
+"fileheader.customMade": {
+        "Author": "git config user.name", // 同时获取用户名与邮箱
+        "Date": "Do not edit", // 文件创建时间(不变)
+        // LastEditors、LastEditTime、FilePath将会自动更新 如果觉得时间更新的太频繁可以使用throttleTime(默认为1分钟)配置更改更新时间。
+        "LastEditors": "git config user.name", // 文件最后编辑者 与Author字段一致
+        // 由于编辑文件就会变更最后编辑时间，多人协作中合并的时候会导致merge
+        // 可以将时间颗粒度改为周、或者月，这样冲突就减少很多。搜索变更时间格式: dateFormat
+        "LastEditTime": "Do not edit", // 文件最后编辑时间
+        // 输出相对路径，类似: /文件夹名称/src/index.js
+        "FilePath": "Do not edit", // 文件在项目中的相对路径 自动更新
+        // 插件会自动将光标移动到Description选项中 方便输入 Description字段可以在specialOptions更改
+        "Description": "", 
+    }
 ```
 
 ## git
@@ -78,9 +90,55 @@ Run make grade to see if you indeed pass the sleep tests.
 Note that make grade runs all tests, including the ones for the assignments below. If you want to run the grade tests for one assignment, type:
 
      $ ./grade-lab-util sleep
+
+测试结果：
+[xiangxun@xiang-mou xv6-labs-2023]$ ./grade-lab-util sleep
+make: 'kernel/kernel' is up to date.
+== Test sleep, no arguments == sleep, no arguments: OK (1.0s) 
+== Test sleep, returns == sleep, returns: OK (0.9s) 
+== Test sleep, makes syscall == sleep, makes syscall: OK (1.0s) 
+
    
 This will run the grade tests that match "sleep". Or, you can type:
      $ make GRADEFLAGS=sleep grade
    
 ```
 
+#### pingpong
+任务要求：
+```
+Write a user-level program that uses xv6 system calls to ''ping-pong'' a byte between two processes over a pair of pipes, one for each direction. The parent should send a byte to the child; the child should print "<pid>: received ping", where <pid> is its process ID, write the byte on the pipe to the parent, and exit; the parent should read the byte from the child, print "<pid>: received pong", and exit. Your solution should be in the file user/pingpong.c.
+使用系统调用写一个用户程序，在两个进程间能够通过一对管道来'ping-pong'（像乒乓球一样） 1字节，，每个方向都一字节。
+父进程能够发送一个字节给子进程，子进程应该打印<pid>: received ping，pid是进程号，写这个字节到管道传给父进程，并退出，父进程应当读取从子进程传来的字节，并接受pong,
+
+```
+提示:
+1. Add the program to UPROGS in Makefile.
+2. Use pipe to create a pipe.
+3. Use fork to create a child.
+4. Use read to read from a pipe, and write to write to a pipe.
+5. Use getpid to find the process ID of the calling process.
+6. User programs on xv6 have a limited set of library functions available to them. You can see the list in user/user.h; the source (other than for system calls) is in user/ulib.c, user/printf.c, and user/umalloc.c.
+
+解决方案：
+```
+// 理解管道
+int p[2];
+char *argv[2];
+argv[0] = "wc";
+argv[1] = 0;
+pipe(p);
+if(fork() == 0) {
+	close(0);
+	dup(p[0]);
+	close(p[0]);
+	close(p[1]);
+	exec("/bin/wc", argv);
+} else {
+	write(p[1], "hello world\n", 12);
+	close(p[0]);
+	close(p[1]);
+}
+参考管道通信：https://blog.csdn.net/qq_51604330/article/details/126492589
+
+```
