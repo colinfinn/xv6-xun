@@ -2,7 +2,7 @@
  * @Author: xiangxun
  * @Date: 2023-12-26 16:55:56
  * @LastEditors: xiangxun
- * @LastEditTime: 2023-12-27 22:57:57
+ * @LastEditTime: 2023-12-28 10:48:14
  * @FilePath: /xv6-labs-2023/readme.md
  * @Description: 
 -->
@@ -173,6 +173,7 @@ loop:
 > Write a simple version of the UNIX find program for xv6: find all the files in a directory tree with a specific name. Your solution should be in the file user/find.c.
 
 提示
+```
 Look at user/ls.c to see how to read directories.
 Use recursion to allow find to descend into sub-directories.
 Don't recurse into "." and "..".
@@ -180,3 +181,18 @@ Changes to the file system persist across runs of qemu; to get a clean file syst
 You'll need to use C strings. Have a look at K&R (the C book), for example Section 5.5.
 Note that == does not compare strings like in Python. Use strcmp() instead.
 Add the program to UPROGS in Makefile.
+```
+
+#### xargs
+任务要求
+> Write a simple version of the UNIX xargs program for xv6: its arguments describe a command to run, it reads lines from the standard input, and it runs the command for each line, appending the line to the command's arguments. Your solution should be in the file user/xargs.c.
+
+提示
+```
+Use fork and exec to invoke the command on each line of input. Use wait in the parent to wait for the child to complete the command.
+To read individual lines of input, read a character at a time until a newline ('\n') appears.
+kernel/param.h declares MAXARG, which may be useful if you need to declare an argv array.
+Add the program to UPROGS in Makefile.
+Changes to the file system persist across runs of qemu; to get a clean file system run make clean and then make qemu.
+
+```
