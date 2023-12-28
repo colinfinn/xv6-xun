@@ -37,6 +37,7 @@ main(int argc, char *argv[])
     // }
 
     read(0, buf, 32);
-    printf("234%s", buf);
+    
+    
     exit(0);
 }
