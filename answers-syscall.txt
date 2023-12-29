@@ -1,0 +1,22 @@
+问题1：Looking at the backtrace output, which function called syscall?
+答：usertrap函数调用了syscall。
+问题2：What is the value of p->trapframe->a7 and what does that value represent? (Hint: look user/initcode.S, the first user program xv6 starts.)
+答：在gdb打印结构体p只有trapframe的地址，要获取a7,需要
+在gdb显示结构体trapframe,
+p /x *(struct trapframe*)0x87f74000,a7的值为0x7。
+查看user/initcode.S中有一行li a7, SYS_exec，将其存放到a7，
+这里的SYS_exec是syscall.h里的宏定义，代表了系统调用号。
+What was the previous mode that the CPU was in?
+位于用户模式
+
+Write down the assembly instruction the kernel is panicing at. Which register corresponds to the variable num?
+lw a3,0
+a3寄存器对应了变量num
+
+Why does the kernel crash? Hint: look at figure 3-3 in the text; is address 0 mapped in the kernel address space? Is that confirmed by the value in scause above?
+地址0为非法地址
+
+
+What is the name of the binary that was running when the kernel paniced? What is its process id (pid)?
+initcode. pid是1
+

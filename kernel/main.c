@@ -1,3 +1,11 @@
+/*
+ * @Author: xiangxun
+ * @Date: 2023-12-27 09:11:58
+ * @LastEditors: xiangxun
+ * @LastEditTime: 2023-12-29 11:28:32
+ * @FilePath: /xv6-labs-2023/kernel/main.c
+ * @Description: 
+ */
 #include "types.h"
 #include "param.h"
 #include "memlayout.h"
@@ -14,7 +22,7 @@ main()
     consoleinit();
     printfinit();
     printf("\n");
-    printf("xv6 kernel is booting\n");
+    printf("xv6 kernel is booting, wo shi sb\n");
     printf("\n");
     kinit();         // physical page allocator
     kvminit();       // create kernel page table

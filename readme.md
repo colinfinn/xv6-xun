@@ -2,7 +2,7 @@
  * @Author: xiangxun
  * @Date: 2023-12-26 16:55:56
  * @LastEditors: xiangxun
- * @LastEditTime: 2023-12-28 10:48:14
+ * @LastEditTime: 2023-12-29 18:59:12
  * @FilePath: /xv6-labs-2023/readme.md
  * @Description: 
 -->
@@ -194,5 +194,68 @@ To read individual lines of input, read a character at a time until a newline ('
 kernel/param.h declares MAXARG, which may be useful if you need to declare an argv array.
 Add the program to UPROGS in Makefile.
 Changes to the file system persist across runs of qemu; to get a clean file system run make clean and then make qemu.
+
+```
+
+
+
+### Lab: system calls
+## Using gdb
+```
+gdb命令：
+riscv64-linux-gnu-gdb kernel/kernel
+
+target remote localhost:端口号
+b设置断点
+c继续
+layout src查看源码
+backtrace打印栈的回溯
+
+n执行一行
+ p /x *p 打印p指针，以十六进制格式（/x）
+
+```
+
+## System call tracing
+```
+In this assignment you will add a system call tracing feature that may help you when debugging later labs. You'll create a new trace system call that will control tracing. It should take one argument, an integer "mask", whose bits specify which system calls to trace. For example, to trace the fork system call, a program calls trace(1 << SYS_fork), where SYS_fork is a syscall number from kernel/syscall.h. You have to modify the xv6 kernel to print out a line when each system call is about to return, if the system call's number is set in the mask. The line should contain the process id, the name of the system call and the return value; you don't need to print the system call arguments. The trace system call should enable tracing for the process that calls it and any children that it subsequently forks, but should not affect other processes.在这个任务中你要添加一个系统调用跟踪功能，对你在之后的调试可能会有帮助。你将要创建一个追踪系统调用来控制跟踪。它应该采用一个参数，一个整数“mask”，其位指定要跟踪哪些系统调用。
+```
+
+
+```
+编写user/trace.c,在函数中调用系统调用trace
+在user.h里添加系统调用的原型
+在usys.pl里添加入口点
+在kernel/syscall.h里添加系统调用号
+在kernel/proc.h的proc的结构体里添加跟踪的mask变量
+在kernel/sysproc.c里添加sys_trace()
+在kernel/syscall.c的syscalls里添加trace, 并输出
+在kernel/proc.c修改fork
+```
+
+## Sysinfo
+```
+In this assignment you will add a system call, sysinfo, that collects information about the running system. The system call takes one argument: a pointer to a struct sysinfo (see kernel/sysinfo.h). The kernel should fill out the fields of this struct: the freemem field should be set to the number of bytes of free memory, and the nproc field should be set to the number of processes whose state is not UNUSED. We provide a test program sysinfotest; you pass this assignment if it prints "sysinfotest: OK".
+```
+
+```
+sysinfo needs to copy a struct sysinfo back to user space; see sys_fstat() (kernel/sysfile.c) and filestat() (kernel/file.c) for examples of how to do that using copyout().
+
+To collect the amount of free memory, add a function to kernel/kalloc.c
+为了收集空闲内存的数量，添加函数
+To collect the number of processes, add a function to kernel/proc.c
+为了收集进程数，添加函数
+
+
+
+```
+
+
+```
+在sysinfo头文件声明该结构体，及其两个字段
+在user/user.h预先声明结构体，和系统调用声明
+根据提示在kalloc中和proc中添加函数，并将声明写在defs.h
+在sysproc中添加该系统调用
+
 
 ```

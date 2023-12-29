@@ -1,4 +1,5 @@
         # qemu -kernel loads the kernel at 0x80000000
+        # 加载内核到0x80000000这个内存地址
         # and causes each hart (i.e. CPU) to jump there.
         # kernel.ld causes the following code to
         # be placed at 0x80000000.
@@ -9,6 +10,7 @@ _entry:
         # stack0 is declared in start.c,
         # with a 4096-byte stack per CPU.
         # sp = stack0 + (hartid * 4096)
+        # 
         la sp, stack0
         li a0, 1024*4
         csrr a1, mhartid
